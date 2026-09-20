@@ -74,37 +74,98 @@
             line-height: 1.4;
         }
         
-      /* QR Container - Image-er exact size hobe, kono extra padding ba faka jaiga thakbe na */
+        /* QR Container */
         .qr-box {
-            background: transparent;
-            border: none;
-            padding: 0;              /* Padding shob kete zero kore dewa holo */
+            background: #fafafa;
+            border: 2px dashed #cbd5e1;
+            padding: 10px;
+            border-radius: 10px;
             margin-bottom: 15px;
-            display: inline-block;   /* Container-ti shudhu image-er size nibe */
-            line-height: 0;          /* Nicher default extra space gulo remove korar jonno */
+            display: block;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        /* QR Image - Jekono size ba height-width ekhane control korun */
         .qr-box img {
-            width: 280px;            /* Width ektu bariye 280px kora holo */
-            height: 380px;           /* Height bariye 380px kora holo (apni 400px ba 420px o korte paren) */
+            width: 260px;
+            height: auto;
             object-fit: contain;
             display: block;
-            border: 2px dashed #cbd5e1; 
-            border-radius: 10px;
-            padding: 10px;           
-            background: #fafafa;     
+            border-radius: 6px;
+        }
+
+        /* Highlighted UPI ID & Copy Section */
+        .upi-container {
+            background-color: #fff7ed;
+            border: 2px solid #ffedd5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .upi-label {
+            font-size: 11px;
+            color: #c2410c;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+        .upi-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
         .upi-id {
-            background: #eef2ff;
-            color: #4f46e5;
-            padding: 6px 10px;
-            border-radius: 6px;
+            color: #9a3412;
             font-weight: bold;
             font-size: 14px;
-            margin-bottom: 15px;
-            display: inline-block;
+            background: #ffedd5;
+            padding: 6px 10px;
+            border-radius: 4px;
+            word-break: break-all;
         }
+        .copy-btn {
+            background-color: #c2410c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #9a3412;
+        }
+
+        /* Payment Instructions Box */
+        .instruction-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        .instruction-title {
+            font-size: 12px;
+            font-weight: bold;
+            color: #334155;
+            margin-bottom: 5px;
+        }
+        .instruction-box ol {
+            margin: 0;
+            padding-left: 18px;
+            font-size: 11.5px;
+            color: #475569;
+            line-height: 1.4;
+        }
+        .instruction-box li {
+            margin-bottom: 4px;
+        }
+
         .btn {
             display: block;
             width: 100%;
@@ -155,10 +216,10 @@
             Student: <span id="studentName">Loading...</span>
         </div>
         
-        <!-- Bilingual Message -->
+        <!-- Custom Message -->
         <div class="msg-box">
-            <p><strong>English:</strong> Please pay your <strong>Tuition Fee / Admission Fee</strong> by scanning the QR code below or using the UPI ID through Google Pay, PhonePe, or any UPI app.</p>
-            <p><strong>বাংলা:</strong> নিচের QR কোড স্ক্যান করে অথবা UPI আইডি ব্যবহার করে আপনার <strong>এডমিশন ফি / টিউশন ফি </strong>পরিশোধ করুন।</p>
+            <p>Please pay your <strong>Admission Fee / Tuition Fee</strong> by scanning the QR code, or copying the UPI ID below.</p>
+            <p>নিচের QR কোড স্ক্যান করে, অথবা UPI আইডি কপি করে আপনার <strong>এডমিশন ফি / টিউশন ফি </strong> প্রদান করুন।</p>
         </div>
         
         <!-- QR Code Section -->
@@ -166,13 +227,24 @@
             <img src="SOVAN KAPRI GOOGLE PAY.jpg" alt="Payment QR Code">
         </div>
 
-        <!-- UPI ID Display -->
-        <div>
-            <span class="upi-id">sovankapri-1@okhdfcbank</span>
+        <!-- Highlighted UPI ID Display with Copy Button -->
+        <div class="upi-container">
+            <div class="upi-label">UPI ID (কপি করতে Copy ID এ ক্লিক করুন)</div>
+            <div class="upi-wrapper">
+                <span class="upi-id" id="upiText">sovankapri-1@okhdfcbank</span>
+                <button class="copy-btn" onclick="copyUpiId()">Copy ID</button>
+            </div>
         </div>
 
-        <!-- Direct UPI Pay Button -->
-        <a href="upi://pay?pa=sovankapri-1@okhdfcbank&pn=Sovanlal%20Kapri&cu=INR" class="btn">Pay via Google Pay / UPI</a>
+        <!-- Payment Instructions -->
+        <div class="instruction-box">
+            <div class="instruction-title">How to Pay / পেমেন্ট করার নিয়ম:</div>
+            <ol>
+                <li>Open Google Pay, PhonePe, or Paytm app. <br>(আপনার Google Pay, PhonePe বা Paytm অ্যাপ খুলুন।)</li>
+                <li>Use 'Scan QR' to scan the above QR code OR use 'Pay to UPI ID' by pasting the copied UPI ID. <br>(উপরের QR কোড স্ক্যান করুন অথবা কপি করা UPI আইডি পেস্ট করে পেমেন্ট করুন।)</li>
+                <li>Complete the payment and share the screenshot on WhatsApp. <br>(পেমেন্ট সম্পন্ন করে হোয়াটসঅ্যাপে স্ক্রিনশট পাঠান।)</li>
+            </ol>
+        </div>
 
         <!-- WhatsApp Screenshot Button -->
         <a href="https://wa.me/919875340842?text=Sir,%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" class="btn whatsapp-btn">Send Screenshot on WhatsApp</a>
@@ -191,7 +263,23 @@
         if (studentName) {
             document.getElementById('studentName').innerText = decodeURIComponent(studentName);
         } else {
-            document.getElementById('studentNameBox').style.display = 'none'; // Jodi name na thake tahole box hide thakbe
+            document.getElementById('studentNameBox').style.display = 'none';
+        }
+
+        // Function to Copy UPI ID
+        function copyUpiId() {
+            const upiText = document.getElementById('upiText').innerText;
+            navigator.clipboard.writeText(upiText).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.innerText = 'Copied!';
+                btn.style.backgroundColor = '#166534';
+                setTimeout(() => {
+                    btn.innerText = 'Copy ID';
+                    btn.style.backgroundColor = '#c2410c';
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy UPI ID');
+            });
         }
     </script>
 
