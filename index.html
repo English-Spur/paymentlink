@@ -1,287 +1,1023 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fee Payment Portal - English Spur</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .card {
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            max-width: 400px;
-            width: 100%;
-        }
-        .logo-container img {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-            border-radius: 50%;
-            margin-bottom: 10px;
-        }
-        .org-name {
-            font-size: 16px;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 2px;
-        }
-        h2 {
-            color: #333333;
-            margin: 5px 0;
-            font-size: 20px;
-        }
-        .subtitle {
-            color: #555555;
-            font-size: 13px;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-        /* Student Name Dynamic Box */
-        .student-box {
-            background: #f0fdf4;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-        .msg-box {
-            background: #fdfdfd;
-            border: 1px solid #eeeeee;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .msg-box p {
-            margin: 6px 0;
-            font-size: 12px;
-            color: #444444;
-            line-height: 1.4;
-        }
-        
-        /* QR Container */
-        .qr-box {
-            background: #fafafa;
-            border: 2px dashed #cbd5e1;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            display: block;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .qr-box img {
-            width: 260px;
-            height: auto;
-            object-fit: contain;
-            display: block;
-            border-radius: 6px;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>English Spur — Consent & Fee Portal</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<!-- Scripts for PDF Generation -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  tailwind.config = { theme: { extend: {
+    colors: { 
+      brand: '#059669', // Emerald 600
+      accent: '#10B981', // Emerald 500
+      dark: '#064E3B' // Emerald 900
+    },
+    fontFamily: { sans: ['Inter','Hind Siliguri','sans-serif'] },
+    boxShadow: {
+      'premium': '0 10px 40px -10px rgba(5, 150, 105, 0.15)',
+      'premium-hover': '0 20px 50px -10px rgba(5, 150, 105, 0.25)',
+    }
+  }}}
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter','Hind Siliguri',sans-serif; background-color: #f8fafc; }
+  .tab-content { display:none; }
+  .tab-content.active { display:block; animation:fadeIn .4s cubic-bezier(0.4, 0, 0.2, 1); }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(15px)} to{opacity:1;transform:translateY(0)} }
+  
+  .nav-tab.active { color:#059669; font-weight: 700; }
+  .nav-tab.active::after {
+    content: ''; display: block; width: 100%; height: 3px; background: #10B981; border-radius: 999px; margin-top: 4px; animation: expandWidth 0.3s ease-out forwards;
+  }
+  @keyframes expandWidth { from { width: 0; } to { width: 100%; } }
 
-        /* Highlighted UPI ID & Copy Section */
-        .upi-container {
-            background-color: #fff7ed;
-            border: 2px solid #ffedd5;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-        }
-        .upi-label {
-            font-size: 11px;
-            color: #c2410c;
-            font-weight: bold;
-            margin-bottom: 5px;
-            text-transform: uppercase;
-        }
-        .upi-wrapper {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .upi-id {
-            color: #9a3412;
-            font-weight: bold;
-            font-size: 14px;
-            background: #ffedd5;
-            padding: 6px 10px;
-            border-radius: 4px;
-            word-break: break-all;
-        }
-        .copy-btn {
-            background-color: #c2410c;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            font-size: 13px;
-            font-weight: bold;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .copy-btn:hover {
-            background-color: #9a3412;
-        }
+  /* --- FORM SPECIFIC CSS --- */
+  .form-container { background: #ffffff; padding: 40px; border-radius: 16px; position: relative; width: 100%; margin: 0 auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); }
+  .brand-header { text-align: center; margin-bottom: 30px; border-bottom: 3px double #1e3a8a; padding-bottom: 15px; width: 100%; overflow: hidden; }
+  .brand-header h1 { color: #1e3a8a; font-size: 28px; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 5px; text-transform: uppercase; }
+  .brand-header .academy-sub { color: #2563eb; font-size: 16px; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+  .brand-header .contact-info { color: #475569; font-size: 13px; line-height: 1.5; }
+  .demo-badge-panel { background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 15px; text-align: center; margin-bottom: 25px; }
+  .demo-badge-panel h2 { color: #1e3a8a; font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .meta-flex-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+  .meta-pill { font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 4px; }
+  .pill-id { color: #dc2626; background-color: #fee2e2; border: 1px solid #fca5a5; }
+  .pill-date { color: #16a34a; background-color: #f0fdf4; border: 1px solid #bbf7d0; }
+  .section-title { color: #2563eb; font-size: 16px; font-weight: 700; margin: 25px 0 15px 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; text-transform: uppercase; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+  .full-width { grid-column: span 2; }
+  .form-group { display: flex; flex-direction: column; margin-bottom: 5px; position: relative; }
+  .form-group label { font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 8px; }
+  .form-group input, .form-group select, .form-group textarea { padding: 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; color: #0f172a; background-color: #f8fafc; outline: none; transition: all 0.3s ease; width: 100%; }
+  .uppercase-input { text-transform: uppercase; }
+  
+  /* Snapshot/PDF Mode */
+  .snapshot-text-view { display: none; padding: 10px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; color: #0f172a; background-color: #f8fafc; word-break: break-word; min-height: 45px; font-weight: 600; }
+  
+  .snapshot-mode { width: 850px !important; max-width: 850px !important; padding: 40px 50px !important; background: #fff !important; }
+  .snapshot-mode .snapshot-text-view { display: block !important; }
+  .snapshot-mode input, .snapshot-mode select, .snapshot-mode textarea, .snapshot-mode .upload-box, .snapshot-mode .agreement-box, .snapshot-mode .action-buttons { display: none !important; }
+  .snapshot-mode .brand-header { margin-bottom: 20px !important; padding-bottom: 20px !important; }
+  .snapshot-mode .demo-badge-panel { padding: 15px !important; margin-bottom: 20px !important; }
+  .snapshot-mode .section-title { margin: 20px 0 10px 0 !important; font-size: 15px !important; }
+  .snapshot-mode .form-grid { gap: 15px !important; }
+  .snapshot-mode .terms-box { font-size: 12px !important; line-height: 1.5 !important; padding: 20px !important; border: 1px solid #cbd5e1 !important; background: #fafafa !important; }
+  .snapshot-mode .terms-box p.font-bold { font-size: 13px !important; }
+  
+  /* PDF Checkbox display */
+  .pdf-checkbox-display { display: none; margin-top: 15px; }
+  .snapshot-mode .pdf-checkbox-display { display: block !important; }
+  .pdf-checkbox-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin-bottom: 8px; color: #334155; }
+  
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: #2563eb; background-color: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
 
-        /* Payment Instructions Box */
-        .instruction-box {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-        .instruction-title {
-            font-size: 12px;
-            font-weight: bold;
-            color: #334155;
-            margin-bottom: 5px;
-        }
-        .instruction-box ol {
-            margin: 0;
-            padding-left: 18px;
-            font-size: 11.5px;
-            color: #475569;
-            line-height: 1.4;
-        }
-        .instruction-box li {
-            margin-bottom: 4px;
-        }
-
-        .btn {
-            display: block;
-            width: 100%;
-            background-color: #28a745;
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 6px;
-            font-size: 15px;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-            transition: background 0.3s;
-            box-sizing: border-box;
-            margin-bottom: 10px;
-        }
-        .btn:hover {
-            background-color: #218838;
-        }
-        .whatsapp-btn {
-            background-color: #25D366;
-        }
-        .whatsapp-btn:hover {
-            background-color: #1ebe5d;
-        }
-        .footer-note {
-            margin-top: 10px;
-            font-size: 11px;
-            color: #777777;
-            line-height: 1.3;
-        }
-    </style>
+  /* Upload Box Style */
+  .upload-box { border: 2px dashed #cbd5e1; border-radius: 12px; padding: 15px; text-align: center; cursor: pointer; background: #f8fafc; transition: all 0.2s; }
+  .upload-box:hover { border-color: #059669; background: #f0fdf4; }
+  .upload-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; margin: 10px auto 0; border: 3px solid #e2e8f0; display: none; }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .full-width { grid-column: span 1; }
+      .form-container { padding: 20px 15px; }
+      .brand-header h1 { font-size: 22px; }
+  }
+</style>
 </head>
-<body>
+<body class="text-slate-800 antialiased">
 
-    <div class="card">
-        <!-- Logo & Organization Details -->
-        <div class="logo-container">
-            <img src="logo.png" alt="Logo">
-        </div>
-        <div class="org-name">English Spur English Training Academy</div>
-        
-        <h2>Fee Payment Portal</h2>
-        <div class="subtitle">ফি পেমেন্ট পোর্টাল</div>
+<!-- HEADER -->
+<header class="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-emerald-100 shadow-sm transition-all">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+    
+    <button onclick="switchTab('home')" class="flex items-center gap-2 shrink-0 group">
+      <img src="logo.png" alt="English Spur Logo" class="h-10 sm:h-12 w-auto object-contain group-hover:scale-105 transition-transform drop-shadow-sm">
+      <div class="text-xl sm:text-2xl font-black tracking-tight flex items-center gap-1">
+        <span class="text-emerald-800 group-hover:text-emerald-600 transition">ENGLISH</span> 
+        <span class="text-emerald-500 group-hover:text-emerald-400 transition">SPUR</span>
+      </div>
+    </button>
+    
+    <!-- Desktop Menu -->
+    <nav class="hidden lg:flex items-center gap-6">
+      <button class="nav-tab active text-sm font-semibold text-slate-500 hover:text-brand transition" data-tab="home">Home</button>
+      <button class="nav-tab text-sm font-semibold text-slate-500 hover:text-brand transition" data-tab="courses">Courses</button>
+      <button class="nav-tab text-sm font-bold text-orange-500 hover:text-orange-600 transition" data-tab="consent">Consent Form</button>
+      <button class="nav-tab text-sm font-semibold text-slate-500 hover:text-brand transition" data-tab="fee">Pay Your Tuition Fee</button>
+    </nav>
 
-        <!-- Dynamic Student Name Display -->
-        <div class="student-box" id="studentNameBox">
-            Student: <span id="studentName">Loading...</span>
-        </div>
-        
-        <!-- Custom Message -->
-        <div class="msg-box">
-            <p>Please pay your <strong>Admission Fee / Tuition Fee</strong> by scanning the QR code, or copying the UPI ID below.</p>
-            <p>নিচের QR কোড স্ক্যান করে, অথবা UPI আইডি কপি করে আপনার <strong>এডমিশন ফি / টিউশন ফি </strong> প্রদান করুন।</p>
-        </div>
-        
-        <!-- QR Code Section -->
-        <div class="qr-box">
-            <img src="SOVAN KAPRI GOOGLE PAY.jpg" alt="Payment QR Code">
+    <div class="flex items-center gap-3">
+      <button id="mobileMenuBtn" class="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-emerald-50 transition focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div id="mobileMenu" class="hidden lg:hidden absolute top-full left-0 w-full bg-white border-b border-emerald-100 shadow-xl px-4 py-4 space-y-2">
+    <button class="nav-tab active block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold bg-emerald-50 text-brand" data-tab="home">Home</button>
+    <button class="nav-tab block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-emerald-50" data-tab="courses">Courses</button>
+    <button class="nav-tab block w-full text-left px-4 py-3 rounded-xl text-sm font-bold text-orange-500 bg-orange-50" data-tab="consent">Consent Form</button>
+    <button class="nav-tab block w-full text-left px-4 py-3 rounded-xl text-sm font-semibold text-slate-600 hover:bg-emerald-50" data-tab="fee">Pay Your Tuition Fee</button>
+  </div>
+</header>
+
+<main class="max-w-6xl mx-auto px-4 sm:px-6 py-8 min-h-screen">
+
+  <!-- HOME TAB -->
+  <section id="tab-home" class="tab-content active">
+    
+    <!-- Hero Section -->
+    <div class="relative bg-[#022c22] rounded-3xl md:rounded-[2.5rem] overflow-hidden p-6 md:p-16 text-white shadow-2xl border border-emerald-900/50 mb-12">
+      <div class="absolute top-0 right-0 w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-emerald-500/20 rounded-full mix-blend-screen filter blur-[100px] opacity-70 animate-pulse"></div>
+      <div class="absolute bottom-0 left-0 w-[300px] md:w-[400px] h-[300px] md:h-[400px] bg-lime-500/10 rounded-full mix-blend-screen filter blur-[100px] opacity-50"></div>
+      
+      <div class="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+        <div class="text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 bg-white/5 backdrop-blur-md border border-white/10 text-emerald-300 px-4 py-1.5 rounded-full text-xs font-bold tracking-widest mb-4 shadow-inner">
+            <span class="w-2 h-2 rounded-full bg-lime-400 animate-ping"></span> SINCE 2020
+          </div>
+          
+          <h1 class="text-3xl md:text-5xl lg:text-6xl font-black leading-[1.15] mb-4 md:mb-6 tracking-tight">
+            Master English & <br> <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-lime-300">Modern Skills</span>
+          </h1>
+          
+          <p class="text-emerald-100/70 text-sm md:text-lg mb-8 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+            From Spoken English to AI, Vibe Coding, Computer, Graphics Design—practical & professional training for all ages.
+          </p>
+          
+          <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+            <button onclick="switchTab('consent')" class="w-full sm:w-auto bg-gradient-to-r from-emerald-500 to-lime-500 text-emerald-950 font-black px-8 py-3.5 rounded-2xl hover:scale-105 transition-transform duration-300 shadow-[0_0_40px_-10px_rgba(16,185,129,0.5)] flex items-center justify-center gap-2 text-base md:text-lg">
+              Fill Consent Form
+            </button>
+            <button onclick="switchTab('fee')" class="w-full sm:w-auto bg-white/10 backdrop-blur-md border border-white/20 text-white font-bold px-8 py-3.5 rounded-2xl hover:bg-white/20 transition-all flex items-center justify-center gap-2 text-base md:text-lg">
+              Pay Tuition Fee
+            </button>
+          </div>
         </div>
 
-        <!-- Highlighted UPI ID Display with Copy Button -->
-        <div class="upi-container">
-            <div class="upi-label">UPI ID (কপি করতে Copy ID এ ক্লিক করুন)</div>
-            <div class="upi-wrapper">
-                <span class="upi-id" id="upiText">sovankapri-1@okhdfcbank</span>
-                <button class="copy-btn" onclick="copyUpiId()">Copy ID</button>
+        <!-- es.png displayed here -->
+        <div class="relative block mt-8 lg:mt-0 max-w-md mx-auto w-full">
+          <div class="absolute inset-0 bg-gradient-to-tr from-emerald-500 to-lime-400 rounded-3xl blur-2xl opacity-20 animate-pulse"></div>
+          <img src="es.png" alt="English Spur" class="relative z-10 rounded-2xl shadow-2xl border border-white/10 object-cover w-full h-auto max-h-[400px]">
+        </div>
+      </div>
+    </div>
+
+    <!-- Founder / Owner Section -->
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <h2 class="text-2xl md:text-4xl font-black text-slate-800 mb-3">Meet Our Founder</h2>
+      <p class="text-sm md:text-base text-slate-500">The visionary behind English Spur.</p>
+    </div>
+    
+    <div class="bg-white rounded-3xl p-6 md:p-10 shadow-premium border border-emerald-100 max-w-4xl mx-auto flex flex-col md:flex-row items-center gap-8">
+      <img src="sk.png" alt="Sovan Kapri" class="w-40 h-40 md:w-56 md:h-56 rounded-full object-cover border-4 border-emerald-100 shadow-lg shrink-0">
+      <div class="text-center md:text-left flex-1">
+        <h3 class="text-2xl md:text-3xl font-black text-slate-800">SOVAN KAPRI</h3>
+        <p class="text-brand font-bold text-lg mt-1">Founder & Lead Trainer</p>
+        <p class="text-slate-600 mt-4 text-sm md:text-base leading-relaxed">
+          An English Honours graduate and retail management specialist, Sovan Kapri combines academic excellence with real-world experience to deliver high-impact, practical English training. Since 2020, he has been dedicated to helping learners overcome hesitation and speak English with confidence.
+        </p>
+        <a href="https://english-spur.github.io/sovan-portfolio/" target="_blank" class="inline-flex items-center justify-center gap-2 mt-6 bg-slate-900 text-white font-bold px-6 py-3 rounded-xl hover:bg-slate-800 transition shadow-lg">
+          View Full Portfolio
+        </a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- COURSES TAB -->
+  <section id="tab-courses" class="tab-content">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+      <h2 class="text-2xl md:text-4xl font-black text-slate-800 mb-3">Our Complete Courses</h2>
+      <p class="text-sm md:text-base text-slate-500">Choose from our wide range of professional and skill-development courses.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- Course 1 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-emerald-100 transition">🗣️</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Power Speak</h3>
+        <p class="text-sm text-slate-500 mb-6">High-impact communication and fluency booster program tailored for adults.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+      <!-- Course 2 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-lime-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-lime-100 transition">📚</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Fearless English for Kids</h3>
+        <p class="text-sm text-slate-500 mb-6">A complete, well-designed course for kids (Age 8-14) with small batches.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+      <!-- Course 3 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-blue-100 transition">🤖</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">AI Little Champ</h3>
+        <p class="text-sm text-slate-500 mb-6">Artificial Intelligence course for kids to build future-ready skills.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+      <!-- Course 4 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-teal-100 transition">✍️</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">English Grammar Champ</h3>
+        <p class="text-sm text-slate-500 mb-6">Master grammar rules effortlessly through fun, play-based methods.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+      <!-- Course 5 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-purple-100 transition">📖</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Reading Master</h3>
+        <p class="text-sm text-slate-500 mb-6">Eliminate reading phobia and master pronunciation, word recognition, and fluency.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+      <!-- Course 6 -->
+      <div class="bg-white rounded-2xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 group">
+        <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center text-2xl mb-4 group-hover:bg-orange-100 transition">💻</div>
+        <h3 class="text-xl font-bold text-slate-800 mb-2">Vibe Coding for Kids</h3>
+        <p class="text-sm text-slate-500 mb-6">Use imagination and AI tools to build games, animations, and apps.</p>
+        <a href="https://english-spur.github.io/admission-site/" target="_blank" class="w-full flex items-center justify-center bg-slate-50 text-emerald-700 font-bold py-3 rounded-xl hover:bg-emerald-600 hover:text-white transition-colors">View Details</a>
+      </div>
+    </div>
+    
+    <div class="mt-10 text-center">
+      <a href="https://english-spur.github.io/admission-site/" target="_blank" class="inline-flex items-center justify-center bg-emerald-600 text-white font-bold px-8 py-4 rounded-xl hover:bg-emerald-700 transition shadow-lg text-sm md:text-base">
+        See All Courses on Admission Site
+      </a>
+    </div>
+  </section>
+
+  <!-- CONSENT TAB -->
+  <section id="tab-consent" class="tab-content">
+    <div class="text-center max-w-2xl mx-auto mb-8">
+      <h2 class="text-2xl md:text-4xl font-black text-slate-800 mb-3">Complete Consent Form</h2>
+      <p class="text-sm md:text-base text-slate-500">Please provide all details and agree to our academy rules.</p>
+    </div>
+
+    <div class="max-w-4xl mx-auto">
+      <div class="form-container" id="consent-registration-area">
+        
+        <div class="brand-header">
+            <h1>English Spur</h1>
+            <div class="academy-sub">Online Training Academy</div>
+            <div class="contact-info">
+                Kanaipur, Bantul, Bagnan, Howrah - 711312<br>
+                <div style="margin-top: 4px;"><strong>Contact:</strong> 9875340842 | <strong>E-mail:</strong> englishspur2020@gmail.com</div>
             </div>
         </div>
 
-        <!-- Payment Instructions -->
-        <div class="instruction-box">
-            <div class="instruction-title">How to Pay / পেমেন্ট করার নিয়ম:</div>
-            <ol>
-                <li>Open Google Pay, PhonePe, or Paytm app. <br>(আপনার Google Pay, PhonePe বা Paytm অ্যাপ খুলুন।)</li>
-                <li>Use 'Scan QR' to scan the above QR code OR Make Payment by pasting the copied UPI ID. <br>(উপরের QR কোড স্ক্যান করুন অথবা কপি করা UPI আইডি পেস্ট করে পেমেন্ট করুন।)</li>
-                <li>Complete the payment and share the screenshot on WhatsApp. <br>(পেমেন্ট সম্পন্ন করে হোয়াটসঅ্যাপে স্ক্রিনশট পাঠান।)</li>
-            </ol>
-        </div>
+        <form id="consentForm">
+            <div class="demo-badge-panel">
+                <h2>Student Consent & Agreement Form</h2>
+                <div class="meta-flex-row">
+                    <div class="meta-pill pill-id">Date: <span id="consentDate">Locking...</span></div>
+                </div>
+            </div>
 
-        <!-- WhatsApp Screenshot Button -->
-        <a href="https://wa.me/919875340842?text=Sir,%20I%20have%20completed%20the%20payment.%20Here%20is%20the%20screenshot." target="_blank" class="btn whatsapp-btn">Send Screenshot on WhatsApp</a>
+            <!-- 1. STUDENT PERSONAL DETAILS -->
+            <div class="section-title">1. Student Personal Details</div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="c-student-name">Full Name *</label>
+                    <input type="text" id="c-student-name" class="uppercase-input" placeholder="ENTER FULL NAME" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-student-name"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-student-code">Student Code / ID *</label>
+                    <input type="text" id="c-student-code" placeholder="e.g. ES-2026-001" required>
+                    <div class="snapshot-text-view" id="view-c-student-code"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-student-occupation">Occupation *</label>
+                    <input type="text" id="c-student-occupation" placeholder="e.g. Student, Working Professional" required>
+                    <div class="snapshot-text-view" id="view-c-student-occupation"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-student-phone">WhatsApp Number *</label>
+                    <input type="tel" id="c-student-phone" placeholder="10 DIGIT NUMBER" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <div class="snapshot-text-view" id="view-c-student-phone"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-student-email">Email Address *</label>
+                    <input type="email" id="c-student-email" placeholder="student@example.com" required>
+                    <div class="snapshot-text-view" id="view-c-student-email"></div>
+                </div>
+            </div>
 
-        <div class="footer-note">
-            After payment, please send the screenshot to WhatsApp: <strong>9875340842</strong><br>
-            পেমেন্ট করার পর স্ক্রিনশটটি হোয়াটসঅ্যাপে পাঠিয়ে দিন।
-        </div>
+            <!-- 2. COURSE DETAILS -->
+            <div class="section-title">2. Course Details</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="c-course-name">Course Name *</label>
+                    <input type="text" id="c-course-name" placeholder="e.g. Power Speak (Basic)" required>
+                    <div class="snapshot-text-view" id="view-c-course-name"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-batch-name">Batch Name / 1-on-1 *</label>
+                    <input type="text" id="c-batch-name" placeholder="e.g. Evening Batch A / 1-on-1" required>
+                    <div class="snapshot-text-view" id="view-c-batch-name"></div>
+                </div>
+            </div>
+
+            <!-- 3. RESIDENTIAL ADDRESS -->
+            <div class="section-title">3. Residential Address</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="c-addr-village">Vill / City *</label>
+                    <input type="text" id="c-addr-village" class="uppercase-input" placeholder="VILLAGE / CITY" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-addr-village"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-addr-po">Post Office *</label>
+                    <input type="text" id="c-addr-po" class="uppercase-input" placeholder="POST OFFICE" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-addr-po"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-addr-ps">Police Station *</label>
+                    <input type="text" id="c-addr-ps" class="uppercase-input" placeholder="POLICE STATION" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-addr-ps"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-addr-dist">District *</label>
+                    <input type="text" id="c-addr-dist" class="uppercase-input" placeholder="DISTRICT" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-addr-dist"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-addr-pin">Pin Code *</label>
+                    <input type="text" id="c-addr-pin" placeholder="6 DIGIT PIN" maxlength="6" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <div class="snapshot-text-view" id="view-c-addr-pin"></div>
+                </div>
+            </div>
+
+            <!-- 4. IDENTITY PROOF & PHOTOS -->
+            <div class="section-title">4. Identity Proof & Photos (Mandatory)</div>
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="c-aadhaar">Aadhaar Card Number *</label>
+                    <input type="text" id="c-aadhaar" placeholder="12 DIGIT AADHAAR NUMBER" maxlength="12" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <div class="snapshot-text-view" id="view-c-aadhaar"></div>
+                </div>
+                
+                <!-- Student Photo -->
+                <div class="form-group">
+                    <label>Student Photo *</label>
+                    <div class="upload-box" onclick="document.getElementById('c-student-photo').click()">
+                        <div class="text-2xl mb-1 text-slate-400">📷</div>
+                        <div class="text-xs font-semibold text-slate-500">Upload Photo (Required)</div>
+                        <input type="file" id="c-student-photo" accept="image/*" class="hidden" onchange="previewPhoto(this, 'preview-student-photo')">
+                        <img id="preview-student-photo" class="upload-preview" alt="Student Photo">
+                        <div class="snapshot-text-view" id="view-c-student-photo" style="margin-top:10px; display:none; text-align:center;">
+                            <span class="text-xs text-slate-500 block mb-1">Student Photo:</span>
+                            <img id="pdf-student-photo" style="max-width:120px; max-height:120px; border-radius:6px; object-fit:cover; border: 1px solid #cbd5e1; margin: 0 auto;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aadhaar Photo -->
+                <div class="form-group">
+                    <label>Aadhaar Card Photo *</label>
+                    <div class="upload-box" onclick="document.getElementById('c-aadhaar-photo').click()">
+                        <div class="text-2xl mb-1 text-slate-400">🪪</div>
+                        <div class="text-xs font-semibold text-slate-500">Upload Aadhaar (Required)</div>
+                        <input type="file" id="c-aadhaar-photo" accept="image/*" class="hidden" onchange="previewPhoto(this, 'preview-aadhaar-photo')">
+                        <img id="preview-aadhaar-photo" class="upload-preview" alt="Aadhaar Photo">
+                        <div class="snapshot-text-view" id="view-c-aadhaar-photo" style="margin-top:10px; display:none; text-align:center;">
+                            <span class="text-xs text-slate-500 block mb-1">Aadhaar Photo:</span>
+                            <img id="pdf-aadhaar-photo" style="max-width:120px; max-height:120px; border-radius:6px; object-fit:cover; border: 1px solid #cbd5e1; margin: 0 auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. GUARDIAN DETAILS -->
+            <div class="section-title">5. Guardian Details</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="c-guardian-name">Guardian Name *</label>
+                    <input type="text" id="c-guardian-name" class="uppercase-input" placeholder="ENTER GUARDIAN NAME" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-c-guardian-name"></div>
+                </div>
+                <div class="form-group">
+                    <label for="c-guardian-relation">Relation *</label>
+                    <select id="c-guardian-relation" required>
+                        <option value="" disabled selected>Select Relation</option>
+                        <option value="FATHER">FATHER</option>
+                        <option value="MOTHER">MOTHER</option>
+                        <option value="BROTHER">BROTHER</option>
+                        <option value="SISTER">SISTER</option>
+                        <option value="OTHER">OTHER</option>
+                    </select>
+                    <div class="snapshot-text-view" id="view-c-guardian-relation"></div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="c-guardian-phone">Guardian WhatsApp *</label>
+                    <input type="tel" id="c-guardian-phone" placeholder="10 DIGIT NUMBER" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '');" required>
+                    <div class="snapshot-text-view" id="view-c-guardian-phone"></div>
+                </div>
+            </div>
+
+            <!-- 6. CONSENT TERMS -->
+            <div class="section-title">6. Terms & Conditions</div>
+            <div class="terms-box bg-slate-50 border border-slate-200 rounded-xl p-6 text-sm leading-relaxed text-slate-700 space-y-6">
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">1. Class Recording Consent:</p>
+                    <p>I voluntarily consent to English Spur recording my online and offline classes, including my voice, video, image, participation, classroom activities, presentations, performances and other learning-related interactions.<br>
+                    <span class="text-xs text-slate-500">আমি স্বেচ্ছায় ইংলিশ স্পার-কে আমার অনলাইন এবং অফলাইন ক্লাস, ভয়েস, ভিডিও, ছবি, অংশগ্রহণ এবং অন্যান্য শেখার কার্যকলাপ রেকর্ড করার সম্মতি দিচ্ছি।</span></p>
+                </div>
+                
+                <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-lg">
+                    <p class="font-bold text-emerald-900 text-base mb-1">2. Social Media & Video Publication Consent (Crucial):</p>
+                    <p class="font-medium text-emerald-800">I expressly authorize English Spur to record my classes and <strong>publish these video recordings, audio, my photographs, and learning activities on various social media platforms (including but not limited to Facebook, YouTube, Instagram, and WhatsApp)</strong> for institutional publicity, branding, marketing, advertising, and promotional activities.<br>
+                    <span class="text-xs text-emerald-700 font-semibold">আমি স্পষ্টভাবে ইংলিশ স্পার-কে আমার ক্লাস রেকর্ড করার এবং <strong>এই ভিডিও রেকর্ডিং, অডিও, আমার ছবি এবং শেখার কার্যকলাপগুলো ফেসবুক, ইউটিউব, ইনস্টাগ্রাম এবং হোয়াটসঅ্যাপের মতো বিভিন্ন সোশ্যাল মিডিয়া প্ল্যাটফর্মে প্রকাশ করার</strong> অনুমতি দিচ্ছি। এটি প্রাতিষ্ঠানিক প্রচার, ব্র্যান্ডিং এবং বিজ্ঞাপনের উদ্দেশ্যে করা হবে।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">3. In Future No Objection Consent:</p>
+                    <p>I confirm that I shall have no objection in the future against English Spur, its founder, or representatives regarding the publication, use, and distribution of my photographs, videos, audio recordings, and learning activities on any social media platform.<br>
+                    <span class="text-xs text-slate-500">আমি নিশ্চিত করছি যে ভবিষ্যতে ইংলিশ স্পার, এর প্রতিষ্ঠাতা বা প্রতিনিধিদের বিরুদ্ধে আমার ছবি, ভিডিও, অডিও রেকর্ডিং এবং শেখার কার্যকলাপ যেকোনো সোশ্যাল মিডিয়া প্ল্যাটফর্মে প্রকাশ, ব্যবহার ও বিতরণের বিষয়ে আমার কোনো আপত্তি থাকবে না।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">4. Policy, Fee & Rules Changes:</p>
+                    <p>I understand and agree that English Spur reserves the right to modify, update, or change course fees, tuition fees, institutional rules, and regulations at any time without prior notice to ensure better service and quality education. As a student/guardian, I agree to abide by these updated policies.<br>
+                    <span class="text-xs text-slate-500">আমি বুঝতে পারছি এবং সম্মত আছি যে উন্নত সেবা ও মানসম্মত শিক্ষা নিশ্চিত করার জন্য ইংলিশ স্পার যেকোনো সময় কোনো পূর্ব নোটিশ ছাড়াই কোর্স ফি, টিউশন ফি, প্রাতিষ্ঠানিক নিয়ম ও প্রবিধান পরিবর্তন বা আপডেট করার অধিকার সংরক্ষণ করে। শিক্ষার্থী/অভিভাবক হিসেবে আমি এই আপডেট করা নীতিমালা মেনে চলতে সম্মত আছি।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">5. Acknowledgement & No Separate Permission Requirement:</p>
+                    <p>I confirm that I have read and understood Clauses 1 and 2 and have given my consent voluntarily. English Spur may select, edit, compile, reproduce, publish and republish the permitted content for the purposes stated above without obtaining separate approval for each individual photograph, video, recording, post or advertisement.<br>
+                    <span class="text-xs text-slate-500">আমি নিশ্চিত করছি যে আমি ক্লজ ১ এবং ২ পড়েছি এবং বুঝেছি এবং স্বেচ্ছায় আমার সম্মতি দিয়েছি। ইংলিশ স্পার প্রতিটি পৃথক ছবি, ভিডিও বা বিজ্ঞাপনের জন্য আলাদা অনুমোদন না নিয়েই উল্লিখিত উদ্দেশ্যে কন্টেন্ট প্রকাশ করতে পারবে।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">6. Rules, Responsibilities & Content Use:</p>
+                    <p>I agree to follow English Spur's academic guidelines, class discipline, attendance, communication policies and institutional rules.<br>
+                    <span class="text-xs text-slate-500">আমি ইংলিশ স্পার-এর একাডেমিক নির্দেশিকা, ক্লাসের শৃঙ্খলা, উপস্থিতি, যোগাযোগ নীতি এবং প্রাতিষ্ঠানিক নিয়মাবলী মেনে চলতে সম্মত আছি।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">7. Privacy, Accuracy & Declaration:</p>
+                    <p>I confirm that the information and materials provided by me are accurate to the best of my knowledge. I understand that this PDF is generated on my device and I must send it to the official English Spur WhatsApp number for verification.<br>
+                    <span class="text-xs text-slate-500">আমি নিশ্চিত করছি যে আমার দেওয়া তথ্য সঠিক। আমি বুঝতে পারছি যে এই পিডিএফটি আমার ডিভাইসে তৈরি হচ্ছে এবং যাচাইয়ের জন্য আমাকে এটি অফিসিয়াল ইংলিশ স্পার হোয়াটসঅ্যাপ নম্বরে পাঠাতে হবে।</span></p>
+                </div>
+
+                <div>
+                    <p class="font-bold text-slate-900 text-base mb-1">8. No Refund Policy:</p>
+                    <p>I understand and agree that under any circumstances, English Spur Online Training Academy will NOT refund any money once paid for admission or course fees.<br>
+                    <span class="text-xs text-slate-500">আমি বুঝতে পারছি এবং সম্মত আছি যে কোনো পরিস্থিতিতে ভর্তি বা কোর্সের ফি বাবদ প্রদত্ত টাকা ইংলিশ স্পার ফেরত দেবে না।</span></p>
+                </div>
+            </div>
+
+            <!-- AGREEMENT CHECKBOXES -->
+            <div class="mt-8 agreement-box bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                <h4 class="font-bold text-slate-800 mb-4 text-lg text-center">Please check all the boxes to agree:</h4>
+                <div class="space-y-4 max-w-2xl mx-auto">
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I agree to the Class Recording (Clause 1). <br><span class="text-xs text-slate-500 font-normal">আমি ক্লাস রেকর্ডিংয়ের সম্মতি দিচ্ছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I agree to Social Media Publication of videos & photos (Clause 2). <br><span class="text-xs text-slate-500 font-normal">আমি সোশ্যাল মিডিয়ায় ভিডিও ও ছবি প্রকাশের সম্মতি দিচ্ছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I confirm I will have no future objections regarding media publication (Clause 3). <br><span class="text-xs text-slate-500 font-normal">আমি ভবিষ্যতে কোনো আপত্তি জানাবো না বলে নিশ্চিত করছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I agree to abide by any future changes in fees and rules (Clause 4). <br><span class="text-xs text-slate-500 font-normal">আমি ভবিষ্যতের ফি ও নিয়ম পরিবর্তনে সম্মত আছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I understand no separate permission is required (Clause 5). <br><span class="text-xs text-slate-500 font-normal">আমি বুঝেছি যে আলাদা অনুমতির প্রয়োজন নেই।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I agree to follow all Rules & Responsibilities (Clause 6). <br><span class="text-xs text-slate-500 font-normal">আমি সব নিয়ম ও দায়িত্ব পালনে সম্মত আছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I confirm the Privacy & Accuracy of my data (Clause 7). <br><span class="text-xs text-slate-500 font-normal">আমি আমার তথ্যের গোপনীয়তা ও সঠিকতার নিশ্চয়তা দিচ্ছি।</span></span>
+                    </label>
+                    <label class="flex items-start gap-3 cursor-pointer group">
+                        <input type="checkbox" required class="pdf-chk mt-1 w-5 h-5 accent-emerald-600 rounded cursor-pointer shrink-0">
+                        <span class="text-sm font-semibold text-slate-700 group-hover:text-emerald-700 transition">I agree to the No Refund Policy (Clause 8). <br><span class="text-xs text-slate-500 font-normal">আমি রিফান্ড পলিসি না থাকায় সম্মত আছি।</span></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- PDF Checkbox Display (Hidden in UI, visible in PDF) -->
+            <div class="pdf-checkbox-display">
+                <h4 class="font-bold text-slate-800 mb-2 border-b border-slate-300 pb-1">Agreements Accepted:</h4>
+                <div class="grid grid-cols-2 gap-2">
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> Class Recording Consent</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> Social Media Publication Consent</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> In Future No Objection Consent</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> Policy, Fee & Rules Changes Agreement</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> No Separate Permission Required</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> Rules & Responsibilities Agreement</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> Privacy & Accuracy Declaration</div>
+                    <div class="pdf-checkbox-item"><span class="text-emerald-600 text-lg">✅</span> No Refund Policy Agreement</div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex flex-col md:flex-row gap-4 mt-10 w-full action-buttons" id="consent-buttons-wrapper">
+                <button type="button" onclick="processConsentForm('share')" id="btnShareConsent" class="w-full bg-brand text-white font-bold py-4 px-6 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 text-base">
+                    <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Share via WhatsApp
+                </button>
+                
+                <button type="button" onclick="processConsentForm('download')" id="btnDownloadConsent" class="w-full md:w-auto bg-slate-800 text-white font-bold py-4 px-8 rounded-xl hover:bg-slate-900 transition shadow-lg shadow-slate-500/30 flex items-center justify-center gap-2 text-base shrink-0">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download PDF
+                </button>
+            </div>
+        </form>
+      </div>
     </div>
+  </section>
 
-    <script>
-        // Automatic Student Name Fetching from URL (e.g. yoursite.com?name=Rahul)
-        const urlParams = new URLSearchParams(window.location.search);
-        const studentName = urlParams.get('name');
+  <!-- TUITION FEE TAB -->
+  <section id="tab-fee" class="tab-content">
+    <div class="text-center max-w-2xl mx-auto mb-8">
+      <h2 class="text-2xl md:text-4xl font-black text-slate-800 mb-3">Pay Your Tuition Fee</h2>
+      <p class="text-sm md:text-base text-slate-500">Exclusive for existing students. Scan the QR code below to pay your monthly tuition fees.</p>
+    </div>
+    
+    <div class="max-w-4xl mx-auto bg-white rounded-3xl shadow-premium border border-emerald-100 overflow-hidden">
+      <div class="form-container" id="fee-receipt-area">
         
-        if (studentName) {
-            document.getElementById('studentName').innerText = decodeURIComponent(studentName);
-        } else {
-            document.getElementById('studentNameBox').style.display = 'none';
-        }
+        <div class="brand-header">
+            <h1>English Spur</h1>
+            <div class="academy-sub">Online Training Academy</div>
+            <div class="contact-info">
+                Kanaipur, Bantul, Bagnan, Howrah - 711312<br>
+                <div style="margin-top: 4px;"><strong>Contact:</strong> 9875340842 | <strong>E-mail:</strong> englishspur2020@gmail.com</div>
+            </div>
+        </div>
 
-        // Function to Copy UPI ID
-        function copyUpiId() {
-            const upiText = document.getElementById('upiText').innerText;
-            navigator.clipboard.writeText(upiText).then(() => {
-                const btn = document.querySelector('.copy-btn');
-                btn.innerText = 'Copied!';
-                btn.style.backgroundColor = '#166534';
-                setTimeout(() => {
-                    btn.innerText = 'Copy ID';
-                    btn.style.backgroundColor = '#c2410c';
-                }, 2000);
-            }).catch(err => {
-                alert('Failed to copy UPI ID');
-            });
-        }
-    </script>
+        <form id="feeForm">
+            <div class="demo-badge-panel bg-emerald-50 border-emerald-200">
+                <h2 class="text-emerald-800">Tuition Fee Payment Section</h2>
+                <div class="meta-flex-row">
+                    <div class="meta-pill bg-white text-emerald-700 border border-emerald-200">Date: <span id="feeDate">Locking...</span></div>
+                </div>
+            </div>
 
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-5 text-sm text-blue-800 mb-8">
+                <p class="font-bold mb-2 text-base">ℹ️ Important Note:</p>
+                <p>After successful payment, please fill out this form to generate your acknowledgement. <br><strong>Please send this PDF acknowledgement along with your payment screenshot to our WhatsApp.</strong> <br> <strong>Your official Digital Money Receipt will be sent to your WhatsApp number after verifying your payment.</strong></p>
+                <p class="text-xs mt-2 text-blue-600">পেমেন্ট সফল হওয়ার পর, এই ফর্মটি পূরণ করে আপনার পেমেন্ট স্লিপ তৈরি করুন। পেমেন্টের স্ক্রিনশট সহ এই স্লিপটি আমাদের হোয়াটসঅ্যাপে পাঠান। <strong>পেমেন্ট ভেরিফিকেশনের পর আপনার অফিসিয়াল ডিজিটাল মানি রিসিট আপনার হোয়াটসঅ্যাপ নম্বরে পাঠিয়ে দেওয়া হবে।</strong></p>
+            </div>
+
+            <!-- Payment Steps -->
+            <div class="section-title">Step 1: Pay via UPI</div>
+            <div class="text-center mb-8">
+                <div class="inline-block bg-emerald-50/50 p-6 rounded-3xl border-2 border-dashed border-emerald-200 mb-4 transition hover:bg-emerald-50">
+                    <p class="text-sm font-bold text-slate-500 mb-4 uppercase tracking-widest">Scan to Pay</p>
+                    <img src="SOVAN KAPRI GOOGLE PAY.jpg" alt="Sovan Kapri Google Pay QR Code" class="w-56 h-56 md:w-72 md:h-72 object-contain rounded-xl mx-auto shadow-md bg-white p-3">
+                </div>
+                <p class="text-slate-500 text-sm mb-3">Or pay directly using UPI ID:</p>
+                <button type="button" onclick="navigator.clipboard.writeText('sovankapri-1@okhdfcbank'); alert('UPI ID Copied successfully!')" class="group inline-flex items-center gap-2 bg-slate-100 hover:bg-emerald-100 border border-slate-200 hover:border-emerald-300 text-slate-700 font-mono font-bold px-5 py-2.5 rounded-xl transition-all shadow-sm text-sm">
+                    sovankapri-1@okhdfcbank
+                    <span class="text-xs bg-white px-2 py-1 rounded text-slate-400 group-hover:text-emerald-600 shadow-sm transition">Copy</span>
+                </button>
+            </div>
+
+            <div class="section-title">Step 2: Enter Payment Details</div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="f-student-name">Student Name *</label>
+                    <input type="text" id="f-student-name" class="uppercase-input" placeholder="ENTER FULL NAME" oninput="this.value = this.value.toUpperCase();" required>
+                    <div class="snapshot-text-view" id="view-f-student-name"></div>
+                </div>
+                <div class="form-group">
+                    <label for="f-student-code">Student Code / ID *</label>
+                    <input type="text" id="f-student-code" placeholder="e.g. ES-2026-001" required>
+                    <div class="snapshot-text-view" id="view-f-student-code"></div>
+                </div>
+                <div class="form-group">
+                    <label for="f-month">Payment Month (Optional)</label>
+                    <input type="text" id="f-month" placeholder="e.g. January 2026">
+                    <div class="snapshot-text-view" id="view-f-month"></div>
+                </div>
+                <div class="form-group">
+                    <label for="f-amount">Amount Paid (₹) *</label>
+                    <input type="number" id="f-amount" placeholder="e.g. 3500" required>
+                    <div class="snapshot-text-view" id="view-f-amount"></div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="f-txnid">Transaction ID / Reference *</label>
+                    <input type="text" id="f-txnid" placeholder="Enter UPI Transaction ID" required>
+                    <div class="snapshot-text-view" id="view-f-txnid"></div>
+                </div>
+                
+                <!-- Payment Screenshot -->
+                <div class="form-group full-width">
+                    <label>Attach Payment Screen Shot *</label>
+                    <div class="upload-box" onclick="document.getElementById('f-screenshot').click()">
+                        <div class="text-2xl mb-1 text-slate-400">🖼️</div>
+                        <div class="text-xs font-semibold text-slate-500">Upload Payment Screenshot (Required)</div>
+                        <input type="file" id="f-screenshot" accept="image/*" class="hidden" onchange="previewPhoto(this, 'preview-f-screenshot')" required>
+                        <img id="preview-f-screenshot" class="upload-preview" alt="Payment Screenshot">
+                        <div class="snapshot-text-view" id="view-f-screenshot" style="margin-top:10px; display:none; text-align:center;">
+                            <span class="text-xs text-slate-500 block mb-1">Payment Screenshot:</span>
+                            <img id="pdf-f-screenshot" style="max-width:200px; max-height:250px; border-radius:6px; object-fit:contain; border: 1px solid #cbd5e1; margin: 0 auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ACTION BUTTONS -->
+            <div class="flex flex-col md:flex-row gap-4 mt-8 w-full action-buttons" id="fee-buttons-wrapper">
+                <button type="button" onclick="processFeeForm('share')" id="btnShareFee" class="w-full bg-brand text-white font-bold py-4 px-6 rounded-xl hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2 text-base">
+                    <svg class="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    Share Receipt via WhatsApp
+                </button>
+                
+                <button type="button" onclick="processFeeForm('download')" id="btnDownloadFee" class="w-full md:w-auto bg-slate-800 text-white font-bold py-4 px-8 rounded-xl hover:bg-slate-900 transition shadow-lg shadow-slate-500/30 flex items-center justify-center gap-2 text-base shrink-0">
+                    <svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Download Receipt PDF
+                </button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- FOOTER -->
+<footer class="bg-[#022c22] text-slate-300 mt-16 border-t border-emerald-900">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex flex-col items-center md:items-start justify-center">
+        <div class="text-xl font-black tracking-tight"><span class="text-white">ENGLISH</span> <span class="text-emerald-400">SPUR</span></div>
+        <p class="text-xs text-emerald-200 mt-1">Online Training Academy · Since 2020</p>
+      </div>
+      <div class="text-center md:text-right">
+        <p class="text-xs text-emerald-400/60">© 2026 ENGLISH SPUR. All Rights Reserved.</p>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- JAVASCRIPT -->
+<script>
+  // ---- TABS SWITCHING ----
+  window.switchTab = (name) => {
+    document.querySelectorAll('.tab-content').forEach(s => s.classList.remove('active'));
+    document.getElementById('tab-' + name)?.classList.add('active');
+    document.querySelectorAll('.nav-tab').forEach(b => {
+      b.classList.toggle('active', b.dataset.tab === name);
+    });
+    document.getElementById('mobileMenu').classList.add('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+  };
+  
+  document.querySelectorAll('.nav-tab').forEach(b => b.addEventListener('click', () => switchTab(b.dataset.tab)));
+  
+  document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+    document.getElementById('mobileMenu').classList.toggle('hidden');
+  });
+
+  // ---- DATES FOR FORMS ----
+  window.addEventListener('DOMContentLoaded', () => {
+      const now = new Date();
+      const day = String(now.getDate()).padStart(2, '0');
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const year = now.getFullYear();
+      const dateString = `${day}-${month}-${year}`;
+      document.getElementById('consentDate').innerText = dateString;
+      document.getElementById('feeDate').innerText = dateString;
+  });
+
+  // ---- PREVIEW PHOTOS ----
+  window.previewPhoto = function(input, previewId) {
+      const preview = document.getElementById(previewId);
+      if (input.files && input.files[0]) {
+          const reader = new FileReader();
+          reader.onload = function(e) {
+              preview.src = e.target.result;
+              preview.style.display = 'block';
+          }
+          reader.readAsDataURL(input.files[0]);
+      } else {
+          preview.style.display = 'none';
+          preview.src = '';
+      }
+  }
+
+  // ---- CONSENT FORM LOGIC ----
+  window.processConsentForm = function(action) {
+      const form = document.getElementById('consentForm');
+      if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+      }
+
+      // Check if all checkboxes are checked
+      const checkboxes = document.querySelectorAll('.pdf-chk');
+      let allChecked = true;
+      checkboxes.forEach(cb => { if (!cb.checked) allChecked = false; });
+      
+      if (!allChecked) {
+          alert("Please agree to all the terms and conditions by checking all the boxes.");
+          return;
+      }
+
+      // Check if mandatory photos are uploaded
+      const studentPhotoInput = document.getElementById('c-student-photo');
+      const aadhaarPhotoInput = document.getElementById('c-aadhaar-photo');
+
+      if (!studentPhotoInput.files || studentPhotoInput.files.length === 0) {
+          alert("Please upload the Student Photo. It is a mandatory field.");
+          return;
+      }
+
+      if (!aadhaarPhotoInput.files || aadhaarPhotoInput.files.length === 0) {
+          alert("Please upload the Aadhaar Card Photo. It is a mandatory field.");
+          return;
+      }
+
+      const btnShare = document.getElementById('btnShareConsent');
+      const btnDownload = document.getElementById('btnDownloadConsent');
+      const originalShareText = btnShare.innerHTML;
+      const originalDownloadText = btnDownload.innerHTML;
+
+      btnShare.disabled = true;
+      btnDownload.disabled = true;
+      if (action === 'share') {
+          btnShare.innerHTML = '<svg class="animate-spin w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
+      } else {
+          btnDownload.innerHTML = '<svg class="animate-spin w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
+      }
+
+      // Map all inputs to snapshot views
+      const inputs = [
+          'c-student-name', 'c-student-code', 'c-student-occupation', 'c-student-phone', 'c-student-email',
+          'c-course-name', 'c-batch-name',
+          'c-addr-village', 'c-addr-po', 'c-addr-ps', 'c-addr-dist', 'c-addr-pin',
+          'c-aadhaar', 'c-guardian-name', 'c-guardian-relation', 'c-guardian-phone'
+      ];
+
+      inputs.forEach(id => {
+          const val = document.getElementById(id).value;
+          const view = document.getElementById('view-' + id);
+          if (view) {
+              // Special formatting for relation dropdown
+              if (id === 'c-guardian-relation') {
+                  const e = document.getElementById(id);
+                  view.innerText = e.options[e.selectedIndex].text;
+              } else {
+                  view.innerText = val;
+              }
+          }
+      });
+
+      // Handle Photos in Snapshot
+      const pdfStudentPhotoContainer = document.getElementById('view-c-student-photo');
+      if (studentPhotoInput.files && studentPhotoInput.files[0]) {
+          document.getElementById('pdf-student-photo').src = document.getElementById('preview-student-photo').src;
+          pdfStudentPhotoContainer.style.display = 'block';
+      } else {
+          pdfStudentPhotoContainer.style.display = 'none';
+      }
+
+      const pdfAadhaarPhotoContainer = document.getElementById('view-c-aadhaar-photo');
+      if (aadhaarPhotoInput.files && aadhaarPhotoInput.files[0]) {
+          document.getElementById('pdf-aadhaar-photo').src = document.getElementById('preview-aadhaar-photo').src;
+          pdfAadhaarPhotoContainer.style.display = 'block';
+      } else {
+          pdfAadhaarPhotoContainer.style.display = 'none';
+      }
+
+      const element = document.getElementById('consent-registration-area');
+      const studentName = document.getElementById('c-student-name').value.toUpperCase();
+      
+      element.classList.add('snapshot-mode');
+
+      html2canvas(element, {
+          scale: 2, 
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 850,
+          logging: false
+      }).then(canvas => {
+          element.classList.remove('snapshot-mode');
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'mm', 'a4');
+          
+          const imgData = canvas.toDataURL('image/jpeg', 0.85); 
+          const pdfWidth = doc.internal.pageSize.getWidth();
+          const pdfHeight = doc.internal.pageSize.getHeight();
+          
+          // Multi-page logic
+          let imgHeight = (canvas.height * pdfWidth) / canvas.width;
+          let heightLeft = imgHeight;
+          let position = 0;
+
+          doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+          heightLeft -= pdfHeight;
+
+          while (heightLeft >= 0) {
+              position = heightLeft - imgHeight;
+              doc.addPage();
+              doc.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeight);
+              heightLeft -= pdfHeight;
+          }
+
+          const fileName = `ES-Consent-${studentName.replace(/\s+/g, '_')}.pdf`;
+
+          if (action === 'share') {
+              const pdfBlob = doc.output('blob');
+              const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+              const whatsappMessage = `🚨 *STUDENT CONSENT FORM* 🚨\n\nনমস্কার *শোভন কাপড়ী*, আমি ইংলিশ স্পার-এর শিক্ষার্থী/অভিভাবক হিসেবে আমার কনসেন্ট ফর্মটি পূরণ করেছি।\n\n*Student Name:* ${studentName}\n\nআমি আমার সাইন করা কনসেন্ট ফর্মের PDF ফাইলটি সংযুক্ত করে পাঠাচ্ছি।`;
+
+              if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+                  navigator.share({
+                      files: [pdfFile],
+                      title: 'Student Consent Form',
+                      text: whatsappMessage
+                  }).then(() => {
+                      // Share successful
+                  }).catch((error) => {
+                      console.log('Share failed', error);
+                      downloadPDF(doc, fileName);
+                  });
+              } else {
+                  downloadPDF(doc, fileName);
+                  setTimeout(() => {
+                      const encodedMsg = encodeURIComponent(whatsappMessage);
+                      window.open(`https://wa.me/919875340842?text=${encodedMsg}`, '_blank');
+                  }, 1000);
+              }
+          } else {
+              downloadPDF(doc, fileName);
+          }
+
+      }).catch(err => {
+          console.error(err);
+          alert("PDF তৈরিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      }).finally(() => {
+          element.classList.remove('snapshot-mode');
+          btnShare.disabled = false;
+          btnDownload.disabled = false;
+          btnShare.innerHTML = originalShareText;
+          btnDownload.innerHTML = originalDownloadText;
+      });
+  }
+
+  // ---- FEE FORM LOGIC ----
+  window.processFeeForm = function(action) {
+      const form = document.getElementById('feeForm');
+      if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+      }
+
+      // Validate Mandatory Screenshot
+      const screenshotInput = document.getElementById('f-screenshot');
+      if (!screenshotInput.files || screenshotInput.files.length === 0) {
+          alert("Please upload the Payment Screenshot. It is a mandatory field.");
+          return;
+      }
+
+      const btnShare = document.getElementById('btnShareFee');
+      const btnDownload = document.getElementById('btnDownloadFee');
+      const originalShareText = btnShare.innerHTML;
+      const originalDownloadText = btnDownload.innerHTML;
+
+      btnShare.disabled = true;
+      btnDownload.disabled = true;
+      if (action === 'share') {
+          btnShare.innerHTML = '<svg class="animate-spin w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
+      } else {
+          btnDownload.innerHTML = '<svg class="animate-spin w-5 h-5 shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Generating...';
+      }
+
+      const sName = document.getElementById('f-student-name').value.toUpperCase();
+      const sCode = document.getElementById('f-student-code').value;
+      const month = document.getElementById('f-month').value || 'N/A';
+      const amount = document.getElementById('f-amount').value;
+      const txnid = document.getElementById('f-txnid').value;
+
+      // Map inputs to snapshot views
+      document.getElementById('view-f-student-name').innerText = sName;
+      document.getElementById('view-f-student-code').innerText = sCode;
+      document.getElementById('view-f-month').innerText = month;
+      document.getElementById('view-f-amount').innerText = `₹ ${amount}`;
+      document.getElementById('view-f-txnid').innerText = txnid;
+
+      // Handle Screenshot in Snapshot
+      const pdfScreenshotContainer = document.getElementById('view-f-screenshot');
+      if (screenshotInput.files && screenshotInput.files[0]) {
+          document.getElementById('pdf-f-screenshot').src = document.getElementById('preview-f-screenshot').src;
+          pdfScreenshotContainer.style.display = 'block';
+      } else {
+          pdfScreenshotContainer.style.display = 'none';
+      }
+
+      const element = document.getElementById('fee-receipt-area');
+      
+      element.classList.add('snapshot-mode');
+
+      html2canvas(element, {
+          scale: 2, 
+          useCORS: true,
+          scrollY: 0,
+          scrollX: 0,
+          windowWidth: 850,
+          logging: false
+      }).then(canvas => {
+          element.classList.remove('snapshot-mode');
+
+          const { jsPDF } = window.jspdf;
+          const doc = new jsPDF('p', 'mm', 'a4');
+          
+          const imgData = canvas.toDataURL('image/jpeg', 0.85); 
+          const pdfWidth = doc.internal.pageSize.getWidth();
+          const pageHeight = doc.internal.pageSize.getHeight();
+          
+          let pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+          let finalWidth = pdfWidth;
+          let finalHeight = pdfHeight;
+
+          // Force fit to page if slightly larger
+          if (pdfHeight > pageHeight) {
+              finalHeight = pageHeight;
+              finalWidth = (canvas.width * finalHeight) / canvas.height;
+          }
+
+          const xOffset = (pdfWidth - finalWidth) / 2;
+          const yOffset = 0; 
+
+          doc.addImage(imgData, 'JPEG', xOffset, yOffset, finalWidth, finalHeight);
+          
+          const fileName = `ES-Fee-Receipt-${sName.replace(/\s+/g, '_')}.pdf`;
+
+          if (action === 'share') {
+              const pdfBlob = doc.output('blob');
+              const pdfFile = new File([pdfBlob], fileName, { type: "application/pdf" });
+
+              const whatsappMessage = `🚨 *TUITION FEE PAYMENT SLIP* 🚨\n\nনমস্কার *শোভন কাপড়ী*, আমি ইংলিশ স্পার-এর মাসিক টিউশন ফি পরিশোধ করেছি।\n\n*Student Name:* ${sName}\n*Student Code:* ${sCode}\n*Month:* ${month}\n*Amount:* ₹${amount}\n*Txn ID:* ${txnid}\n\nআমি আমার পেমেন্ট স্লিপের PDF এবং পেমেন্টের স্ক্রিনশট সংযুক্ত করে পাঠাচ্ছি।`;
+
+              if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+                  navigator.share({
+                      files: [pdfFile],
+                      title: 'Tuition Fee Receipt',
+                      text: whatsappMessage
+                  }).then(() => {
+                      // Share successful
+                  }).catch((error) => {
+                      console.log('Share failed', error);
+                      downloadPDF(doc, fileName);
+                  });
+              } else {
+                  downloadPDF(doc, fileName);
+                  setTimeout(() => {
+                      const encodedMsg = encodeURIComponent(whatsappMessage);
+                      window.open(`https://wa.me/919875340842?text=${encodedMsg}`, '_blank');
+                  }, 1000);
+              }
+          } else {
+              downloadPDF(doc, fileName);
+          }
+
+      }).catch(err => {
+          console.error(err);
+          alert("PDF তৈরিতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।");
+      }).finally(() => {
+          element.classList.remove('snapshot-mode');
+          btnShare.disabled = false;
+          btnDownload.disabled = false;
+          btnShare.innerHTML = originalShareText;
+          btnDownload.innerHTML = originalDownloadText;
+      });
+  }
+
+  // Helper function for Downloading PDF
+  function downloadPDF(doc, fileName) {
+      const pdfBlob = doc.output('blob');
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      const downloadLink = document.createElement('a');
+      downloadLink.href = blobUrl;
+      downloadLink.download = fileName;
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+      alert("PDF Downloaded Successfully!");
+  }
+</script>
 </body>
 </html>
